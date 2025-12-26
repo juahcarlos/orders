@@ -1,19 +1,19 @@
+import uuid
+from datetime import datetime
+from decimal import Decimal
+from unittest.mock import AsyncMock
+
 import fakeredis.aioredis
 import pytest
-import uuid
 
-from datetime import datetime, timezone
-from decimal import Decimal
-from unittest.mock import AsyncMock, MagicMock, patch
-
-from app.models.models import Order, User
+from app.core.dependencies import get_user_repository
+from app.main import app
 from app.repositories.user import UserRepository
-from app.schemas.auth_schemas import LoginRequest, UserContext
+from app.schemas.auth_schemas import LoginRequest
 from app.schemas.order_schemas import OrderCreate, OrderResponse, OrderStatus
 from app.services.auth_service import AuthService
 from app.services.jwt_services import JWTService
 from app.services.order_service import OrderService
-
 
 
 @pytest.fixture
@@ -40,7 +40,6 @@ def order_update_data(order_create_data):
         status=OrderStatus.PAID,
     )
 
-
 @pytest.fixture
 def order_model(order_id):
     order = OrderResponse(
@@ -51,15 +50,13 @@ def order_model(order_id):
         status=OrderStatus.PENDING,
         created_at=datetime.now(),
     )
-    return order 
-
+    return order
 
 @pytest.fixture
 def order_model_patch(order_model):
     order = order_model
     order.status=OrderStatus.PAID
     return order
- 
 
 @pytest.fixture
 def order_id():
@@ -134,15 +131,11 @@ def auth_service_success(mock_user_repo_success, jwt_service):
     service.user_repo = mock_user_repo_success
     return service
 
-
 @pytest.fixture
 def test_app(mock_user_repo_none):
-    from app.main import app # импорт твоих зависимостей
-    from app.core.dependencies import get_user_repository 
     app.dependency_overrides[get_user_repository] = lambda: mock_user_repo_none
     yield app
     app.dependency_overrides.clear()
-
 
 @pytest.fixture
 def login_request():

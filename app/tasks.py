@@ -1,8 +1,8 @@
-from celery import Celery
 import time
 
-from app.utils.logs import log
+from celery import Celery
 
+from app.utils.logs import log
 
 celery_app = Celery('tasks', broker='redis://redis:6379/0')
 

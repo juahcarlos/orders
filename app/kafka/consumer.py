@@ -1,9 +1,10 @@
 """Kafka consumer service for order processing."""
 import json
+
 from confluent_kafka import Consumer, KafkaError
+
 from app.tasks import process_order_task
 from app.utils.logs import log
-
 
 consumer = Consumer({
     'bootstrap.servers': 'kafka:9092',
@@ -25,7 +26,7 @@ def run_consumer():
                 continue
             log.debug(f"ConsumerError: {msg.error()}")
             continue
-        
+
         try:
             data = json.loads(msg.value().decode('utf-8'))
             log.debug(f"ConsumerData: {data}")

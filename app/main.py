@@ -13,10 +13,10 @@ from slowapi.middleware import SlowAPIMiddleware
 from app.api.auth import router as auth_router
 from app.api.orders import router as orders_router
 from app.core.config import settings
-from app.kafka.kafka_client import KafkaManager
-from app.utils.logs import log
 from app.core.redis_init import rdb
+from app.kafka.kafka_client import KafkaManager
 from app.utils.limiter import limiter
+from app.utils.logs import log
 
 
 @asynccontextmanager
@@ -28,9 +28,9 @@ async def lifespan(app: FastAPI):
     await rdb.ping()
     await KafkaManager.start()
     log.debug("Services started")
-    
+
     yield
-    
+
     await KafkaManager.stop()
     await rdb.close()
     log.debug("Services stopped")

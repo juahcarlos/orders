@@ -1,8 +1,8 @@
 """Kafka producer manager for asynchronous message publishing."""
 import asyncio
+import json
 
 from aiokafka import AIOKafkaProducer
-import json
 
 
 class KafkaManager:

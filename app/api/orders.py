@@ -1,18 +1,13 @@
 """Orders API endpoints for create and show order by ID and all orders for certain user."""
-import json
 import uuid
 
-from typing import List
-
-from fastapi import APIRouter, Depends, Query, Request, status
+from fastapi import APIRouter, Depends, Request, status
 from fastapi.security import OAuth2PasswordBearer
 
 from app.core.dependencies import CurrentUser, get_order_repository
 from app.schemas.order_schemas import OrderCreate, OrderResponse
 from app.services.order_service import OrderService
 from app.utils.limiter import limiter
-from app.utils.logs import log
-
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
@@ -67,14 +62,14 @@ async def get_order(
 @router.get(
     "/user/{user_id}",
     dependencies=[Depends(oauth2_scheme)],
-    response_model=List[OrderResponse],
+    response_model=list[OrderResponse],
     status_code=status.HTTP_200_OK
 )
 async def get_order_user(
     user_id: int,
     user: CurrentUser,
     service: OrderService = Depends(get_order_service),
-) -> List[OrderResponse]:
+) -> list[OrderResponse]:
     """Get order by user_id"""
     result = await service.get_order_user(user_id=user_id)
     return result

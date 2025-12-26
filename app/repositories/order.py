@@ -1,18 +1,10 @@
 import uuid
 
-from datetime import datetime, timedelta
-from decimal import Decimal
-from typing import List
-
-
-from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
 
 from app.models.models import Order
 from app.repositories.base import BaseRepository
-from app.schemas.order_schemas import OrderCreate, OrderResponse, OrderStatus
-from app.utils.logs import log
+from app.schemas.order_schemas import OrderCreate, OrderStatus
 
 
 class OrderRepository(BaseRepository[Order]):
@@ -33,7 +25,7 @@ class OrderRepository(BaseRepository[Order]):
             total_price=total_price,
             status=status.value,
         )
-        return res 
+        return res
 
     async def update_order(
         self,
@@ -44,7 +36,7 @@ class OrderRepository(BaseRepository[Order]):
             order,
             data=data,
         )
-        return res 
+        return res
 
     async def get_order(
         self,
@@ -56,6 +48,6 @@ class OrderRepository(BaseRepository[Order]):
     async def get_order_user(
         self,
         user_id: int,
-    ) -> List[Order]:
+    ) -> list[Order]:
         res = await self.get_multi(filters={"user_id":user_id})
         return res

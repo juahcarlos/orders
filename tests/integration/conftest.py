@@ -1,28 +1,24 @@
 import asyncio
-import pytest
 
+import pytest
 from httpx import AsyncClient
 from redis.asyncio import Redis
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import create_database, database_exists
 
 from app.core import config
-from app.main import app
+from app.core.database import Base, engine
+from app.core.dependencies import get_current_user, get_db
 from app.core.redis_init import rdb
-from app.core.dependencies import get_current_user
+from app.main import app
 from app.schemas.auth_schemas import UserContext
 from app.schemas.order_schemas import OrderStatus
-from sqlalchemy.ext.asyncio import create_async_engine
-from app.core.database import AsyncSessionLocal, Base, engine
-from app.core.dependencies import get_db
-
 
 conf = config.settings
 TEST_DB_URL = f"postgresql+asyncpg://{conf.POSTGRES_USER}:{conf.POSTGRES_PASSWORD}@postgres:5432/test_db"
 
 engine = create_async_engine(TEST_DB_URL)
-
 
 @pytest.fixture(scope="session")
 def event_loop():

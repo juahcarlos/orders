@@ -1,21 +1,17 @@
 import uuid
-
 from datetime import datetime, timezone
 from decimal import Decimal
 from typing import Any
 
 from sqlalchemy import (
-    Boolean,
     DateTime,
+    Enum,
     ForeignKey,
     Index,
     Integer,
     Numeric,
     String,
-    Text,
-    UniqueConstraint,
 )
-from sqlalchemy import Enum
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 

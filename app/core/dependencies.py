@@ -9,12 +9,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
 from app.core.database import get_db
-from app.repositories.user import UserRepository
 from app.repositories.order import OrderRepository
+from app.repositories.user import UserRepository
 from app.schemas.auth_schemas import TokenPayload, UserContext
 from app.services.auth_service import AuthService
 from app.services.jwt_services import JWTService
-
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.api_prefix}/auth/token")
 

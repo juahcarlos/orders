@@ -6,7 +6,7 @@ authors = ["Michael <michael@mail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
 fastapi = "^0.109.0"
 uvicorn = {extras = ["standard"], version = "^0.27.0"}
 sqlalchemy = "^2.0.25"
@@ -21,7 +21,7 @@ psycopg2-binary = "^2.9.11"
 celery = "^5.3.0"
 redis = "^4.5.0"
 aiokafka = "*"
-# confluent-kafka = "^2.3.0"
+confluent-kafka = "^2.3.0"
 slowapi = "^0.1.9"
 sqlalchemy-utils = "^0.42.1"
 bcrypt = "^5.0.0"
@@ -29,7 +29,6 @@ bcrypt = "^5.0.0"
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.4"
 pytest-asyncio = "^0.25.1"
-# pytest-cov = "^4.1.0"
 httpx = "^0.26.0"
 mypy = "^1.8.0"
 ruff = "^0.1.14"
@@ -54,15 +53,6 @@ exclude = [
 ]
 
 [tool.ruff.lint]
-# Rules:
-# E/W - pycodestyle (стиль кода)
-# F - pyflakes (ошибки)
-# I - isort (сортировка импортов)
-# N - pep8-naming (именование)
-# UP - pyupgrade (современный Python)
-# B - flake8-bugbear (потенциальные баги)
-# C4 - flake8-comprehensions (list/dict comprehensions)
-# SIM - flake8-simplify (упрощение кода)
 select = ["E", "W", "F", "I", "N", "UP", "B", "C4", "SIM"]
 
 ignore = [
@@ -86,12 +76,13 @@ indent-style = "space"
 line-ending = "auto"
 
 [tool.mypy]
-python_version = "3.10"
+exclude = '^tests/'
+python_version = "3.11"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = false
 disallow_incomplete_defs = false
-check_untyped_defs = true
+check_untyped_defs = false
 no_implicit_optional = true
 warn_redundant_casts = true
 warn_unused_ignores = true

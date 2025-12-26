@@ -1,15 +1,12 @@
 import uuid
 
-from typing import List
+from fastapi import HTTPException
 
-from fastapi import HTTPException, status
-
+from app.core.redis_init import rdb
 from app.kafka.kafka_client import send_to_kafka
 from app.repositories.order import OrderRepository
-from app.core.redis_init import rdb
 from app.schemas.order_schemas import OrderCreate, OrderResponse
 from app.utils.logs import log
-
 
 
 class OrderService:
@@ -47,7 +44,7 @@ class OrderService:
             })
             log.debug(f"DEBUG:  send_new_order_event to QUEUE {order}")
         except Exception as ex:
-            log.error(f"ERROR: can't send_new_order_event to QUEUE {order}")
+            log.error(f"ERROR: can't send_new_order_event to QUEUE {order} ex {ex}")
 
         return OrderResponse.model_validate(res)
 
@@ -106,7 +103,7 @@ class OrderService:
     async def get_order_user(
         self,
         user_id: int,
-    ) -> List[OrderResponse]:
+    ) -> list[OrderResponse]:
         """Get order by user_id"""
         orders = await self.order_repo.get_order_user(user_id=user_id)
 

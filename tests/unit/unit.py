@@ -1,8 +1,12 @@
 import json
+from unittest.mock import patch
+
 import pytest
-from app.schemas.order_schemas import OrderStatus
 from fastapi import HTTPException
+
 from app.schemas.auth_schemas import LoginRequest
+from app.schemas.order_schemas import OrderStatus
+
 
 @pytest.mark.asyncio
 async def test_create_order(order_service, order_repo, order_create_data, order_model):
@@ -76,9 +80,9 @@ async def test_service_get_order_cache_hit(order_service, fake_rdb, order_repo, 
     """Ensures that if data exists in Redis, the service returns it
     immediately without calling the repository."""
     await fake_rdb.set(f"order:{order_id}", order_model.model_dump_json())
-    
+
     order_repo.get_order.return_value = order_model
-    
+
     result = await order_service.get_order(order_id)
     assert result.id == order_id
 
@@ -118,28 +122,26 @@ async def test_auth_success(auth_service_success, login_request):
     assert "refresh_token" in tokens
 
 
-from httpx import AsyncClient
-from unittest.mock import AsyncMock, patch
 @pytest.mark.asyncio
 async def test_auth_success(auth_service_success, mock_user_repo_success):
     request = LoginRequest(email="user@test.com", password="pass123")
-    
+
     with patch("app.services.auth_service.UserRepository") as mocked_class:
         mocked_class.return_value = mock_user_repo_success
         tokens = await auth_service_success.token(request, db=None)
-        
+
     assert tokens['access_token'] is not None
 
 
 @pytest.mark.asyncio
 async def test_auth_wrong_password(auth_service_wrong_password, mock_user_repo_wrong_password):
     request = LoginRequest(email="user@test.com", password="wrongpass")
-    
+
     with patch("app.services.auth_service.UserRepository") as mocked_class:
         mocked_class.return_value = mock_user_repo_wrong_password
-        
+
         with pytest.raises(HTTPException) as exc:
             await auth_service_wrong_password.token(request, db=None)
-            
+
     assert exc.value.status_code == 401
     assert "Incorrect email or password" in exc.value.detail

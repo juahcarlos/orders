@@ -9,7 +9,6 @@ from app.schemas.auth_schemas import LoginRequest, RegisterRequest, TokenPair, U
 from app.services.auth_service import AuthService
 from app.utils.limiter import limiter
 
-
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
